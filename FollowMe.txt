@@ -1,1 +1,6 @@
 1. get the rabbitmq.client 
+##########################
+Work Queues
+1.message durability
+2.message acknowledgment
+3.fair dispatch
