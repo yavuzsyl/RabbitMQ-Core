@@ -1,3 +1,14 @@
+LOCAL
+rabbit mq mesaj kuyruk sistemidir queue
+erlang , rabbitmq restart service
+cmd sbin=>rabbitmq-plugins enable rabbitmq_management arayüz için management plugini enable edilir.
+http://localhost:15672/ local 
+
+CLOUD
+go to
+cloudamqp.com
+
+
 1. get the rabbitmq.client 
 ##########################
 Work Queues
