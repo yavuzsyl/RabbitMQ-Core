@@ -20,7 +20,12 @@ namespace RabbirMQTK.Consumer
                 using (var channel = connection.CreateModel())
                 {
 
-                    channel.QueueDeclare("rabbitSpeeding", durable: true, false, false, null); //1.message durability
+                    channel.ExchangeDeclare("logs", durable: true, type: ExchangeType.Fanout);
+
+                    //exchange e kuyruk bind edilecek her yeni consumer instanceı ayağa kalktığında farklı kuyruk oluşacak
+                    var queueName = channel.QueueDeclare().QueueName;
+                    channel.QueueBind(queue: queueName, exchange: "logs", routingKey: "");
+
                     #region comment
                     //prefetchCount consumer her seferde mesajları tek tek alacak 1 mesaj işlemi bitmeden diğerini almayacak
                     //global consumer instance sayısına göre false olursa her instance  tek seferde prefetchCount kadar mesaj alır ,
@@ -30,7 +35,7 @@ namespace RabbirMQTK.Consumer
                     #endregion
                     channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);//fair dipatch
 
-                    Console.WriteLine("waiting for messages");
+                    Console.WriteLine("waiting for logs");
 
                     //event-in ctor we specify listen to which channel
                     var consumer = new EventingBasicConsumer(channel);
@@ -40,18 +45,18 @@ namespace RabbirMQTK.Consumer
                     //when false after consuming message succesfully, consumer will decide to delete or keep the message 
                     //mesajı aldıktan sonra brokera mesaj başarıyla işlendikten sonra silineceği bilgisini biz vereceğizzz
                     #endregion
-                    channel.BasicConsume("rabbitSpeeding", autoAck: false, consumer);
+                    channel.BasicConsume(queue:queueName, autoAck: false, consumer);
 
                     consumer.Received += (model, ea) =>
                     {
                         var messagByte = ea.Body;
-                        var message = Encoding.UTF8.GetString(messagByte);
-                        Console.WriteLine($"Message has been received : \"{message}\" ");
+                        var logs = Encoding.UTF8.GetString(messagByte);
+                        Console.WriteLine($"logs has been received : \"{logs}\" ");
 
                         //simulating message process
                         int simulatedProcessTimeForEveryMessage = int.Parse(GetMessage(args));
                         Thread.Sleep(simulatedProcessTimeForEveryMessage);
-                        Console.WriteLine("Message has been processed");
+                        Console.WriteLine("logs has been processed");
 
                         //provding information to broker that it can delete the message now
                         channel.BasicAck(ea.DeliveryTag, multiple: false);//2.message acknowledgment

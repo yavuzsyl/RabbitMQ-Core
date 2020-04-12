@@ -18,14 +18,10 @@ namespace RabbirMQTK.Publisher
                 //channel
                 using (var channel = connection.CreateModel())
                 {
-                    #region comment
-                    //queue-durable false in memory true in disk?-exclusive true only one channel false any channel-autodelete to delete queue after all shit s done
-                    //with durable true messages wont be lost when instance restarted 
-                    #endregion
-                    channel.QueueDeclare("rabbitSpeeding", durable: true, false, false, null);//1.message durability
-
+                    channel.ExchangeDeclare("logs", durable:true, type: ExchangeType.Fanout);
 
                     string message = GetMessage(args);
+
                     for (int i = 1; i < 11; i++)
                     {
                         var messageAsByte = Encoding.UTF8.GetBytes($"{i}-{message}");
@@ -35,17 +31,18 @@ namespace RabbirMQTK.Publisher
                         properties.Persistent = true;
 
                         //2nd overload => if we dont provide exchange default shit gets in business first parameter, routingkey aka queue?
-                        channel.BasicPublish(string.Empty, routingKey: "rabbitSpeeding", properties, messageAsByte);//message in queue
+                        //fanout exchange => we dont provide routingKey cuz we want to send messages to all subscribers
+                        channel.BasicPublish("logs", "", properties, messageAsByte);//message in queue
 
                         Console.WriteLine($"Message has been sent : {i}-{message}");
                     }
 
                 }
             }
-            Console.WriteLine("Press the key mah man");
-            Console.ReadLine();
+            //Console.WriteLine("Press the key mah man");
+            //Console.ReadLine();
         }
-
+        //send arguements through console ex => dotnet run "message"
         private static string GetMessage(string[] args)
         {
             return args[0];

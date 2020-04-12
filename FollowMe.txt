@@ -1,6 +1,11 @@
-1. get the rabbitmq.client 
+﻿1. get the rabbitmq.client 
 ##########################
 Work Queues
 1.message durability
 2.message acknowledgment
 3.fair dispatch
+###############
+Fanout exchange
+						routes > queue
+publisher > excahnge =>	routes > queue	> subscribers // tüm queue lara eşitt olarak dağıtılır
+						routes > queue
