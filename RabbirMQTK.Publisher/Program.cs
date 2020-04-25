@@ -20,7 +20,7 @@ namespace RabbirMQTK.Publisher
                 {
                     channel.ExchangeDeclare("logs", durable:true, type: ExchangeType.Fanout);
 
-                    string message = GetMessage(args);
+                    string message = GetMessage(args);//mesajlar konsoldan gönderiliyor
 
                     for (int i = 1; i < 11; i++)
                     {
