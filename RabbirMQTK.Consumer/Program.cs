@@ -1,11 +1,19 @@
 ﻿using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
+using System.IO;
 using System.Text;
 using System.Threading;
 
 namespace RabbirMQTK.Consumer
 {
+    //publisher tarafından gönderilen critical ve error routing_key dinlenecek
+    public enum LogLevel
+    {
+        Critical = 1,
+        Error = 2
+    }
+
     class Program
     {
         static void Main(string[] args)
@@ -20,24 +28,20 @@ namespace RabbirMQTK.Consumer
                 using (var channel = connection.CreateModel())
                 {
 
-                    channel.ExchangeDeclare("logs", durable: true, type: ExchangeType.Fanout);
+                    channel.ExchangeDeclare("DirectExchange", type: ExchangeType.Direct, durable: true);
 
-                    //exchange e kuyruk bind edilecek her yeni consumer instanceı ayağa kalktığında farklı kuyruk oluşacak
                     var queueName = channel.QueueDeclare().QueueName;
-                    channel.QueueBind(queue: queueName, exchange: "logs", routingKey: "");
 
-                    #region comment
-                    //prefetchCount consumer her seferde mesajları tek tek alacak 1 mesaj işlemi bitmeden diğerini almayacak
-                    //global consumer instance sayısına göre false olursa her instance  tek seferde prefetchCount kadar mesaj alır ,
-                    //global true olursa tüm instancelar toplam olarak tek seferde prefetchCount kadar mesaj alır
-                    //wont consume any messages before the current ones(prefetchCount) done successfully
-                    //if global true all conusmer instances takes prefetchCount as 1 instance, if false every consumer instance takes prefetchCount by one's own 
-                    #endregion
-                    channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);//fair dipatch
+                    foreach (var item in Enum.GetNames(typeof(LogLevel)))
+                    {
+                        //tek bir queue exchange e belirtilen routing keyler için bind edilecek
+                        channel.QueueBind(queue: queueName, "DirectExchange", routingKey: item);
+                    }
+       
+                    channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
 
                     Console.WriteLine("waiting for logs");
 
-                    //event-in ctor we specify listen to which channel
                     var consumer = new EventingBasicConsumer(channel);
 
                     #region comment
@@ -45,19 +49,21 @@ namespace RabbirMQTK.Consumer
                     //when false after consuming message succesfully, consumer will decide to delete or keep the message 
                     //mesajı aldıktan sonra brokera mesaj başarıyla işlendikten sonra silineceği bilgisini biz vereceğizzz
                     #endregion
-                    channel.BasicConsume(queue:queueName, autoAck: false, consumer);
+                    channel.BasicConsume(queueName, autoAck: false, consumer);
 
                     consumer.Received += (model, ea) =>
                     {
-                        var messagByte = ea.Body;
-                        var logs = Encoding.UTF8.GetString(messagByte);
-                        Console.WriteLine($"logs has been received : \"{logs}\" ");
+                        var log = ea.Body;
+                        var logb = Encoding.UTF8.GetString(log);
+                        Console.WriteLine($"log has been received : \"{logb}\" ");
 
                         //simulating message process
                         int simulatedProcessTimeForEveryMessage = int.Parse(GetMessage(args));
                         Thread.Sleep(simulatedProcessTimeForEveryMessage);
                         Console.WriteLine("logs has been processed");
 
+                        File.AppendAllText("logs_critical_error.txt", $"{logb}\n");
+                       
                         //provding information to broker that it can delete the message now
                         channel.BasicAck(ea.DeliveryTag, multiple: false);//2.message acknowledgment
 

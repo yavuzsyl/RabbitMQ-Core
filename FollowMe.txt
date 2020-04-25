@@ -23,3 +23,6 @@ publisher > excahnge =>	routes > queue	> subscribers // tüm queue lara eşitt o
 
 subscriberlar ayağa kalktığı zaman yeni queue lar oluşur ve bunlar exchange ' bind edilirler hepsi farklı isimde queuelar olur.
 Exchange e gelen iletiler tüm subscriberlara gönderilir
+########### Direct Exchange ####################
+
+publisher > message with routing_key > exchange > subscriber which listens specific routing_key consumes

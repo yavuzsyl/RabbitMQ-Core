@@ -4,6 +4,15 @@ using System.Text;
 
 namespace RabbirMQTK.Publisher
 {
+
+    public enum LogLevel
+    {
+        Critical = 1,
+        Error = 2,
+        Info = 3,
+        Warning = 4
+    }
+
     class Program
     {
         static void Main(string[] args)
@@ -18,34 +27,34 @@ namespace RabbirMQTK.Publisher
                 //channel
                 using (var channel = connection.CreateModel())
                 {
-                    channel.ExchangeDeclare("logs", durable:true, type: ExchangeType.Fanout);
 
-                    string message = GetMessage(args);//mesajlar konsoldan gönderiliyor
+                    channel.ExchangeDeclare("DirectExchange", type: ExchangeType.Direct, durable: true);
+
+                    Array logLevel = Enum.GetValues(typeof(LogLevel));
+
 
                     for (int i = 1; i < 11; i++)
                     {
-                        var messageAsByte = Encoding.UTF8.GetBytes($"{i}-{message}");
-                        
+                        Random rnd = new Random();
+
+                        LogLevel log = (LogLevel)logLevel.GetValue(rnd.Next(logLevel.Length));
+
+                        var messageAsByte = Encoding.UTF8.GetBytes($"LOG-{i}-{log}");
+
                         //keeps safe messages when instance down
                         var properties = channel.CreateBasicProperties();
                         properties.Persistent = true;
 
-                        //2nd overload => if we dont provide exchange default shit gets in business first parameter, routingkey aka queue?
-                        //fanout exchange => we dont provide routingKey cuz we want to send messages to all subscribers
-                        channel.BasicPublish("logs", "", properties, messageAsByte);//message in queue
+                        channel.BasicPublish("DirectExchange", routingKey: log.ToString(), properties, messageAsByte);//message in queue
 
-                        Console.WriteLine($"Message has been sent : {i}-{message}");
+                        Console.WriteLine($"LOG has been sent -{i}-{log}");
                     }
 
                 }
+                Console.WriteLine("Press the key mah man");
+                Console.ReadLine();
             }
-            //Console.WriteLine("Press the key mah man");
-            //Console.ReadLine();
         }
-        //send arguements through console ex => dotnet run "message"
-        private static string GetMessage(string[] args)
-        {
-            return args[0];
-        }
+
     }
 }
