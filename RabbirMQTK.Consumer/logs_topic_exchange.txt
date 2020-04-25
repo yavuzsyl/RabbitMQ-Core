@@ -1,0 +1,14 @@
+LOG-10-Info-Info-Warning
+LOG-1-Info-Error-Warning
+LOG-1-Error-Info-Warning
+LOG-2-Info-Error-Warning
+LOG-6-Error-Critical-Warning
+LOG-7-Critical-Info-Warning
+LOG-3-Error-Error-Warning
+LOG-5-Error-Error-Warning
+LOG-10-Error-Warning-Warning
+LOG-7-Info-Info-Warning
+LOG-1-Critical-Warning-Warning
+LOG-1-Critical-Warning-Warning
+LOG-9-Warning-Warning-Warning
+LOG-9-Warning-Warning-Warning

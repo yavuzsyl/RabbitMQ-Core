@@ -26,3 +26,24 @@ Exchange e gelen iletiler tüm subscriberlara gönderilir
 ########### Direct Exchange ####################
 
 publisher > message with routing_key > exchange > subscriber which listens specific routing_key consumes
+
+########## Topic Exchange ######################
+
+publish edilen routing_key ler içinde geçen ifadelerden istenilen şekilde yakalanıp consume edilebilir.
+
+Publisher > Routing_key= critical.error.warning
+
+consumer > Routing_key = *.error.*-- 1.herhangi bir değer 2.error 3.herhangi bir değer olanları consume et
+consumer > Routing_key = #.warning -- başı ne olursa olsun sonu warning ile bitenleri consume et 
+gibi gibi
+
+
+
+
+
+---------------
+publisher exchange varsa mesajları exchange e atar bu exchange e consumerlar belirtilen routingkeyler ile queue oluşturup subscribe olurlar. Tek queue ile birden fazla routing_key alınabilir.
+fanoutta routingkey yoktur exchange e subscribe olan tüm queue lar mesajları consume edebilir.
+directte routingkeyler ile queue lar exchange e subscribe olurlar
+topicde direct gibi ama routingkeylerde içeren ifadelere göre consume edilebilir
+exchange olmadan publisher mesajları direk queue ya atar consumer queuedan dinler

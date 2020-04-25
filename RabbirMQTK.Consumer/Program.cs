@@ -28,16 +28,14 @@ namespace RabbirMQTK.Consumer
                 using (var channel = connection.CreateModel())
                 {
 
-                    channel.ExchangeDeclare("DirectExchange", type: ExchangeType.Direct, durable: true);
+                    channel.ExchangeDeclare("TopicExchange", type: ExchangeType.Topic, durable: true);
 
                     var queueName = channel.QueueDeclare().QueueName;
 
-                    foreach (var item in Enum.GetNames(typeof(LogLevel)))
-                    {
-                        //tek bir queue exchange e belirtilen routing keyler için bind edilecek
-                        channel.QueueBind(queue: queueName, "DirectExchange", routingKey: item);
-                    }
-       
+                    //string routingKey = "Info.*.Warning";
+                    string routingKey = "#.Warning";//sonu warning ile biten tüm routingkeyleri dinleyecek
+                    channel.QueueBind(queue: queueName, "TopicExchange", routingKey: routingKey);
+
                     channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
 
                     Console.WriteLine("waiting for logs");
@@ -62,8 +60,8 @@ namespace RabbirMQTK.Consumer
                         Thread.Sleep(simulatedProcessTimeForEveryMessage);
                         Console.WriteLine("logs has been processed");
 
-                        File.AppendAllText("logs_critical_error.txt", $"{logb}\n");
-                       
+                        File.AppendAllText("logs_topic_exchange.txt", $"{logb}\n");
+
                         //provding information to broker that it can delete the message now
                         channel.BasicAck(ea.DeliveryTag, multiple: false);//2.message acknowledgment
 
