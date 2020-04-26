@@ -33,7 +33,7 @@ namespace RabbirMQTK.Publisher
                     Array logLevel = Enum.GetValues(typeof(LogLevel));
 
 
-                    for (int i = 1; i < 11; i++) 
+                    for (int i = 1; i < 11; i++)
                     {
                         Random rnd = new Random();
 
