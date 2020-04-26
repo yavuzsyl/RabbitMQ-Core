@@ -1,9 +1,12 @@
 ﻿using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using RabbitMQTK.Consumer;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 
 namespace RabbirMQTK.Consumer
@@ -47,7 +50,9 @@ namespace RabbirMQTK.Consumer
                     consumer.Received += (model, ea) =>
                     {
                         var message = Encoding.UTF8.GetString(ea.Body);
-                        Console.WriteLine($"Received message {message}");
+                        var user = JsonSerializer.Deserialize<User>(message);
+
+                        Console.WriteLine($"Received message {user.ToString()}");
                         channel.BasicAck(ea.DeliveryTag, multiple: false);
 
 

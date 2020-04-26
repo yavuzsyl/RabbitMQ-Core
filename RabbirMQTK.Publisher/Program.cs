@@ -1,4 +1,6 @@
-﻿using RabbitMQ.Client;
+﻿using Newtonsoft.Json;
+using RabbitMQ.Client;
+using RabbitMQTK.Publisher;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -41,7 +43,17 @@ namespace RabbirMQTK.Publisher
                     //giden mesajın headerına key-value değerleri eklendi
                     properties.Headers = headers;
 
-                    channel.BasicPublish("HeaderExchange", routingKey: string.Empty, properties, Encoding.UTF8.GetBytes("Header message"));//message in queue
+                    User user = new User
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Email = "noice@mail.com",
+                        Name = "Noice man",
+                        Password = "Noiceman123"
+                    };
+
+                    var userStr = JsonConvert.SerializeObject(user);
+
+                    channel.BasicPublish("HeaderExchange", routingKey: string.Empty, properties, Encoding.UTF8.GetBytes(userStr));//message in queue
 
                     Console.WriteLine($"Header message sent");
 
