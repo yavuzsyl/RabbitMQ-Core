@@ -1,6 +1,7 @@
 ﻿using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -28,42 +29,26 @@ namespace RabbirMQTK.Consumer
                 using (var channel = connection.CreateModel())
                 {
 
-                    channel.ExchangeDeclare("TopicExchange", type: ExchangeType.Topic, durable: true);
+                    channel.ExchangeDeclare("HeaderExchange", type: ExchangeType.Headers, durable: true);
 
-                    var queueName = channel.QueueDeclare().QueueName;
+                    channel.QueueDeclare("queue1", false, false, false, null);
 
-                    //string routingKey = "Info.*.Warning";
-                    string routingKey = "#.Warning";//sonu warning ile biten tüm routingkeyleri dinleyecek
-                    channel.QueueBind(queue: queueName, "TopicExchange", routingKey: routingKey);
+                    Dictionary<string, object> headers = new Dictionary<string, object>();
+                    headers.Add("format", "pdf");
+                    headers.Add("shape", "A4");
+                    headers.Add("x-match", "any");//header değerleri bire bir uymalı
 
-                    channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
-
-                    Console.WriteLine("waiting for logs");
+                    channel.QueueBind("queue1", "HeaderExchange", string.Empty, arguments: headers);
 
                     var consumer = new EventingBasicConsumer(channel);
-
-                    #region comment
-                    //autoAck specifies that recieved message will be deleted or not after receiving it
-                    //when false after consuming message succesfully, consumer will decide to delete or keep the message 
-                    //mesajı aldıktan sonra brokera mesaj başarıyla işlendikten sonra silineceği bilgisini biz vereceğizzz
-                    #endregion
-                    channel.BasicConsume(queueName, autoAck: false, consumer);
+                    //gelen mesajı consume etme işlemi
+                    channel.BasicConsume("queue1", false, consumer);
 
                     consumer.Received += (model, ea) =>
                     {
-                        var log = ea.Body;
-                        var logb = Encoding.UTF8.GetString(log);
-                        Console.WriteLine($"log has been received : \"{logb}\" ");
-
-                        //simulating message process
-                        int simulatedProcessTimeForEveryMessage = int.Parse(GetMessage(args));
-                        Thread.Sleep(simulatedProcessTimeForEveryMessage);
-                        Console.WriteLine("logs has been processed");
-
-                        File.AppendAllText("logs_topic_exchange.txt", $"{logb}\n");
-
-                        //provding information to broker that it can delete the message now
-                        channel.BasicAck(ea.DeliveryTag, multiple: false);//2.message acknowledgment
+                        var message = Encoding.UTF8.GetString(ea.Body);
+                        Console.WriteLine($"Received message {message}");
+                        channel.BasicAck(ea.DeliveryTag, multiple: false);
 
 
                     };

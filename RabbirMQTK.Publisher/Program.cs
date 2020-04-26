@@ -1,5 +1,6 @@
 ﻿using RabbitMQ.Client;
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace RabbirMQTK.Publisher
@@ -28,31 +29,21 @@ namespace RabbirMQTK.Publisher
                 using (var channel = connection.CreateModel())
                 {
 
-                    channel.ExchangeDeclare("TopicExchange", type: ExchangeType.Topic, durable: true);
+                    channel.ExchangeDeclare("HeaderExchange", type: ExchangeType.Headers, durable: true);
 
-                    Array logLevel = Enum.GetValues(typeof(LogLevel));
+                    Dictionary<string, object> headers = new Dictionary<string, object>();
+                    headers.Add("format1", "pdf");
+                    headers.Add("shape", "A4");
 
+                    //keeps safe messages when instance down
+                    var properties = channel.CreateBasicProperties();
+                    properties.Persistent = true;
+                    //giden mesajın headerına key-value değerleri eklendi
+                    properties.Headers = headers;
 
-                    for (int i = 1; i < 11; i++)
-                    {
-                        Random rnd = new Random();
+                    channel.BasicPublish("HeaderExchange", routingKey: string.Empty, properties, Encoding.UTF8.GetBytes("Header message"));//message in queue
 
-                        LogLevel log1 = (LogLevel)logLevel.GetValue(rnd.Next(logLevel.Length));
-                        LogLevel log2 = (LogLevel)logLevel.GetValue(rnd.Next(logLevel.Length));
-                        LogLevel log3 = (LogLevel)logLevel.GetValue(rnd.Next(logLevel.Length));
-
-                        var messageAsByte = Encoding.UTF8.GetBytes($"LOG-{i}-{log1}-{log2}-{log3}");
-
-                        //keeps safe messages when instance down
-                        var properties = channel.CreateBasicProperties();
-                        properties.Persistent = true;
-
-                        var logsRoutingKey = $"{log1}.{log2}.{log3}";
-
-                        channel.BasicPublish("TopicExchange", routingKey: logsRoutingKey, properties, messageAsByte);//message in queue
-
-                        Console.WriteLine($"LOG has been sent -{i}-{log1}-{log2}-{log3}");
-                    }
+                    Console.WriteLine($"Header message sent");
 
                 }
                 Console.WriteLine("Press the key mah man");

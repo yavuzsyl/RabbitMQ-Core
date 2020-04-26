@@ -37,9 +37,16 @@ consumer > Routing_key = *.error.*-- 1.herhangi bir değer 2.error 3.herhangi bi
 consumer > Routing_key = #.warning -- başı ne olursa olsun sonu warning ile bitenleri consume et 
 gibi gibi
 
+############## Header Exchange ######################
 
+mesajlar routing key ile değil header ile gönderilir. Headerda keyvalue değerleri bulunur.
+Consumer lar bu exchange subscribe olmak için gerekli key-value değerleri ile queue oluşturup exchange e bin edilirler.
 
-
+x-match="any"
+"Material"="wood"
+"type"="cupboard"
+headerda bu ikisinden herhangi biri varsa queue ya atılır
+x-match="all" yapılırsa headerda ki tüm değerlerin eşleşmesi gerekir
 
 ---------------
 publisher exchange varsa mesajları exchange e atar bu exchange e consumerlar belirtilen routingkeyler ile queue oluşturup subscribe olurlar. Tek queue ile birden fazla routing_key alınabilir.
