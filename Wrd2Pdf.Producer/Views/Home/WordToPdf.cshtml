@@ -1,0 +1,60 @@
+﻿@using Wrd2Pdf.Producer.Models
+@model WordToPdf
+@{
+    ViewData["Title"] = "WordToPdf";
+}
+
+@section Scripts{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+
+
+}
+<div class="container">
+
+    <div class="row p-1 bg-primary rounded">
+        <div class="text-white" style="text-align:right">
+            <span><b>WordToPdf</b></span>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="offset-md-4">
+            <div class="p-1 bg-primary rounded text-white text-center">
+                <h3>Convert</h3>
+            </div>
+            <hr />
+            @if (ViewBag.result != null)
+            {
+                string cs_class = ViewBag.state ? "success" : "danger";
+                <div>
+                    <div class="card border-@cs_class mb-3" style="max-width: 18rem;">
+                        <div class="card-header">Process State</div>
+                        <div class="card-body text-@cs_class">
+                            <h5 class="card-title">Message</h5>
+                            <p class="card-text">@ViewBag.result</p>
+                        </div>
+                    </div>
+                </div>
+
+            }
+            <form asp-controller="Home" asp-action="WordToPdf" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label class="col-form-label" asp-for="Email"></label>
+                    <input asp-for="Email" class="form-control">
+                </div>
+                <div class="custom-file form-group">
+                    <label class="custom-file-label" asp-for="WordFile"></label>
+                    <input type="file" asp-for="WordFile" class="custom-file-input" id="customFile">
+                </div>
+                <div class="form-group">
+                    <br />
+                    <input type="submit" class="btn btn-outline-primary" value="Convert">
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</div>
