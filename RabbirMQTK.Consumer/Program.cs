@@ -39,20 +39,20 @@ namespace RabbirMQTK.Consumer
                     Dictionary<string, object> headers = new Dictionary<string, object>();
                     headers.Add("format", "pdf");
                     headers.Add("shape", "A4");
-                    headers.Add("x-match", "any");//header değerleri bire bir uymalı
+                    headers.Add("x-match", "any");//header değerleri bire bir uymalı all ise
 
                     channel.QueueBind("queue1", "HeaderExchange", string.Empty, arguments: headers);
 
                     var consumer = new EventingBasicConsumer(channel);
                     //gelen mesajı consume etme işlemi
-                    channel.BasicConsume("queue1", false, consumer);
+                    channel.BasicConsume("queue1",autoAck:false, consumer);
 
                     consumer.Received += (model, ea) =>
                     {
                         var message = Encoding.UTF8.GetString(ea.Body);
                         var user = JsonSerializer.Deserialize<User>(message);
 
-                        Console.WriteLine($"Received message {user.ToString()}");
+                        Console.WriteLine($"Received message {user}");
                         channel.BasicAck(ea.DeliveryTag, multiple: false);
 
 
