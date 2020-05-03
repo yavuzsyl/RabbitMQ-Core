@@ -26,3 +26,8 @@ Exchange e gelen iletiler tüm subscriberlara gönderilir
 ########### Direct Exchange ####################
 
 publisher > message with routing_key > exchange > subscriber which listens specific routing_key consumes
+
+############### WordToPdf
+packcage Spire.Doc 
+System.Security.Permissions
+https://www.e-iceblue.com/Introduce/word-for-net-introduce.html
