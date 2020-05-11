@@ -39,8 +39,8 @@ gibi gibi
 
 ############## Header Exchange ######################
 
-mesajlar routing key ile değil header ile gönderilir. Headerda keyvalue değerleri bulunur.
-Consumer lar bu exchange subscribe olmak için gerekli key-value değerleri ile queue oluşturup exchange e bin edilirler.
+mesajlar routing key ile değil properties de header ile gönderilir. Headerda keyvalue değerleri bulunur.
+Consumer lar bu exchange subscribe olmak için gerekli key-value değerleri ile queue oluşturup exchange e bind edilirler.
 
 x-match="any"
 "Material"="wood"

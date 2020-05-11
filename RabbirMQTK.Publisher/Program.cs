@@ -53,7 +53,7 @@ namespace RabbirMQTK.Publisher
 
                     var userStr = JsonConvert.SerializeObject(user);
 
-                    channel.BasicPublish("HeaderExchange", routingKey: string.Empty, properties, Encoding.UTF8.GetBytes(userStr));//message in queue
+                    channel.BasicPublish("HeaderExchange", routingKey: string.Empty, properties, body: Encoding.UTF8.GetBytes(userStr));
 
                     Console.WriteLine($"Header message sent");
 

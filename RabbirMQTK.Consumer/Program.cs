@@ -41,11 +41,11 @@ namespace RabbirMQTK.Consumer
                     headers.Add("shape", "A4");
                     headers.Add("x-match", "any");//header değerleri bire bir uymalı all ise
 
-                    channel.QueueBind("queue1", "HeaderExchange", string.Empty, arguments: headers);
+                    channel.QueueBind("queue1", "HeaderExchange", routingKey: string.Empty, arguments: headers);
 
                     var consumer = new EventingBasicConsumer(channel);
                     //gelen mesajı consume etme işlemi
-                    channel.BasicConsume("queue1",autoAck:false, consumer);
+                    channel.BasicConsume("queue1", autoAck: false, consumer);
 
                     consumer.Received += (model, ea) =>
                     {
