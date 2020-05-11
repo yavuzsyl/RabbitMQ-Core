@@ -16,3 +16,10 @@ LOG-5-Critical
 LOG-6-Critical
 LOG-7-Critical
 LOG-9-Error
+LOG-1-Error
+LOG-2-Critical
+LOG-3-Critical
+LOG-5-Error
+LOG-7-Critical
+LOG-9-Error
+LOG-10-Error

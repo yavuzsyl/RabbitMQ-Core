@@ -35,6 +35,7 @@ namespace RabbirMQTK.Consumer
                     foreach (var item in Enum.GetNames(typeof(LogLevel)))
                     {
                         //tek bir queue exchange e belirtilen routing keyler için bind edilecek
+                        //1 queue da 1 den fazla routing-key olabilir
                         channel.QueueBind(queue: queueName, "DirectExchange", routingKey: item);
                     }
        

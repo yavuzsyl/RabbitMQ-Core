@@ -26,6 +26,8 @@ Exchange e gelen iletiler tüm subscriberlara gönderilir
 ########### Direct Exchange ####################
 
 publisher > message with routing_key > exchange > subscriber which listens specific routing_key consumes
+1 queue da 1 den fazla routing-key olabilir
+publisher queue tanımlamadığı sürece dinleyen consumer yoksa mesajlar silinir
 
 ############### WordToPdf
 packcage Spire.Doc 
