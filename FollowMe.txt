@@ -18,8 +18,10 @@ Work Queues
 ###############
 ###################### Fanout exchange ###########################
 						routes > queue
-publisher > excahnge =>	routes > queue	> subscribers // tüm queue lara eşitt olarak dağıtılır
+publisher > excahnge =>	routes > queue	> subscribers // tüm queue lara eşit olarak dağıtılır
 						routes > queue
 
-subscriberlar ayağa kalktığı zaman yeni queue lar oluşur ve bunlar exchange ' bind edilirler hepsi farklı isimde queuelar olur.
+subscriberlar ayağa kalktığı zaman yeni queue lar oluşur ve bunlar exchange'e bind edilirler hepsi farklı isimde queuelar olur.
 Exchange e gelen iletiler tüm subscriberlara gönderilir
+publish ederken queue oluşturulmadığı eğer ayakta dinleyen consumer yoksa iletiler kaybolur
+fanoutta routing key yok mesajlar exchange e iletilir ve queue oluşturup bu exchange'e subscribe olan tüm consumealar bu mesajları alır

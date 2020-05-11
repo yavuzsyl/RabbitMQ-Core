@@ -30,7 +30,6 @@ namespace RabbirMQTK.Publisher
                         var properties = channel.CreateBasicProperties();
                         properties.Persistent = true;
 
-                        //2nd overload => if we dont provide exchange default shit gets in business first parameter, routingkey aka queue?
                         //fanout exchange => we dont provide routingKey cuz we want to send messages to all subscribers
                         channel.BasicPublish("logs", "", properties, messageAsByte);//message in queue
 
