@@ -33,4 +33,4 @@ publisher queue tanımlamadığı sürece dinleyen consumer yoksa mesajlar
 packcage Spire.Doc 
 System.Security.Permissions
 https://www.e-iceblue.com/Introduce/word-for-net-introduce.html
-publisher queue declare ederse consumer tarafında sadece bu queue ya bind olmak yeterli queue declare etmeden
+publisher queue declare ederse consumer tarafında sadece bu queue ya bind olmak yeterli queue declare etmeden//publisher tarafında exchange olmak zorunda
