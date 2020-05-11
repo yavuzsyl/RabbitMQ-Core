@@ -56,7 +56,7 @@ namespace Wrd2Pdf.Producer.Controllers
                         channel.QueueDeclare(
                             queue: "File", durable: true, exclusive: false, autoDelete: false, arguments: null);
 
-                        //queue exchang'e bind edilecek 
+                        //queue exchange'e bind edilecek 
                         channel.QueueBind(
                             queue: "File", exchange: ConverterDirectExchange, routingKey: ConverterRoutingKey, arguments: null);
 
@@ -73,12 +73,12 @@ namespace Wrd2Pdf.Producer.Controllers
                         byte[] byteMessage = Encoding.UTF8.GetBytes(serializedMessage);
 
                         var properties = channel.CreateBasicProperties();
-                        properties.Persistent = true;//keeps safe the message bro
+                        properties.Persistent = true;//keeps safe the message
 
                         channel.BasicPublish(
                             exchange: ConverterDirectExchange, routingKey: ConverterRoutingKey, basicProperties: properties, body: byteMessage);
 
-                        ViewBag.result = "After word to pdf convert process we will send you pdf file with an email";
+                        ViewBag.result = "After the word to pdf convert process we will send you pdf file with an email";
                         ViewBag.state = true;
 
                     }

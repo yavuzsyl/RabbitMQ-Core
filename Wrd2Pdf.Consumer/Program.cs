@@ -52,6 +52,7 @@ namespace Wrd2Pdf.Consumer
                             var messageJsonStr = Encoding.UTF8.GetString(ea.Body.ToArray());
                             var message = JsonConvert.DeserializeObject<FileMessageQueue>(messageJsonStr);
 
+                            #region Converting process
                             Document document = new Document();
                             document.LoadFromStream(new MemoryStream(message.WordByte), FileFormat.Docx2013);
 
@@ -60,6 +61,7 @@ namespace Wrd2Pdf.Consumer
                                 document.SaveToStream(ms, FileFormat.PDF);
                                 result = SendEmail(message.Email, ms, message.FileName);
                             }
+                            #endregion
                         }
                         catch (Exception ex)
                         {
@@ -112,7 +114,7 @@ namespace Wrd2Pdf.Consumer
 
                 smtpClient.Send(mailMessage);
                 memoryStream.Close();
-                Console.WriteLine("Mail Send");
+                Console.WriteLine("Mail Sent");
                 return true;
             }
             catch (Exception ex)

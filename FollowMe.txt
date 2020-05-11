@@ -27,9 +27,10 @@ Exchange e gelen iletiler tüm subscriberlara gönderilir
 
 publisher > message with routing_key > exchange > subscriber which listens specific routing_key consumes
 1 queue da 1 den fazla routing-key olabilir
-publisher queue tanımlamadığı sürece dinleyen consumer yoksa mesajlar silinir
+publisher queue tanımlamadığı sürece dinleyen consumer yoksa mesajlar 
 
 ############### WordToPdf
 packcage Spire.Doc 
 System.Security.Permissions
 https://www.e-iceblue.com/Introduce/word-for-net-introduce.html
+publisher queue declare ederse consumer tarafında sadece bu queue ya bind olmak yeterli queue declare etmeden
