@@ -12,3 +12,6 @@ LOG-1-Critical-Warning-Warning
 LOG-1-Critical-Warning-Warning
 LOG-9-Warning-Warning-Warning
 LOG-9-Warning-Warning-Warning
+LOG-2-Critical-Warning-Warning
+LOG-5-Warning-Info-Warning
+LOG-9-Warning-Error-Warning

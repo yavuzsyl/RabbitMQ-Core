@@ -49,7 +49,7 @@ namespace RabbirMQTK.Publisher
 
                         var logsRoutingKey = $"{log1}.{log2}.{log3}";
 
-                        channel.BasicPublish("TopicExchange", routingKey: logsRoutingKey, properties, messageAsByte);//message in queue
+                        channel.BasicPublish("TopicExchange", routingKey: logsRoutingKey, properties, messageAsByte);
 
                         Console.WriteLine($"LOG has been sent -{i}-{log1}-{log2}-{log3}");
                     }
