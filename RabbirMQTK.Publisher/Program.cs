@@ -19,22 +19,22 @@ namespace RabbirMQTK.Publisher
                 using (var channel = connection.CreateModel())
                 {
                     #region comment
-                    //queue-durable false in memory true in disk?-exclusive true only one channel false any channel-autodelete to delete queue after all shit s done
+                    //queue-durable false in memory true in disk?-exclusive true only one channel false any channel-autodelete to delete queue after all done
                     //with durable true messages wont be lost when instance restarted 
                     #endregion
-                    channel.QueueDeclare("rabbitSpeeding", durable: true, false, false, null);//1.message durability
+                    channel.QueueDeclare("rabbitSpeeding", durable: true, exclusive: false, autoDelete: false, arguments: null);//1.message durability
 
 
                     string message = GetMessage(args);
                     for (int i = 1; i < 11; i++)
                     {
                         var messageAsByte = Encoding.UTF8.GetBytes($"{i}-{message}");
-                        
+
                         //keeps safe messages when instance down
                         var properties = channel.CreateBasicProperties();
                         properties.Persistent = true;
 
-                        //2nd overload => if we dont provide exchange default shit gets in business first parameter, routingkey aka queue?
+                        //2nd overload => if we dont provide exchange default gets in business first parameter, routingkey aka queue?
                         channel.BasicPublish(string.Empty, routingKey: "rabbitSpeeding", properties, messageAsByte);//message in queue
 
                         Console.WriteLine($"Message has been sent : {i}-{message}");

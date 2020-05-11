@@ -20,7 +20,7 @@ namespace RabbirMQTK.Consumer
                 using (var channel = connection.CreateModel())
                 {
 
-                    channel.QueueDeclare("rabbitSpeeding", durable: true, false, false, null); //1.message durability
+                    channel.QueueDeclare("rabbitSpeeding", durable: true, exclusive: false, autoDelete: false, arguments: null); //1.message durability
                     #region comment
                     //prefetchCount consumer her seferde mesajları tek tek alacak 1 mesaj işlemi bitmeden diğerini almayacak
                     //global consumer instance sayısına göre false olursa her instance  tek seferde prefetchCount kadar mesaj alır ,
